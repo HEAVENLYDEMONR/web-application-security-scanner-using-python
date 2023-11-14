@@ -1,0 +1,41 @@
+import requests
+
+# Check for cross-site scripting (XSS) vulnerability
+def check_xss(url):
+    payloads = [
+        "<script>alert('XSS')</script>",
+        # More comprehensive XSS payloads
+        # ...
+    ]
+    for payload in payloads:
+        try:
+            response = requests.get(url + payload)
+            if payload in response.text:
+                print("XSS vulnerability found: " + url)
+                break  # Exit loop once a vulnerability is found
+        except requests.RequestException:
+            print("Error occurred while checking XSS vulnerability.")
+
+# Check for SQL injection vulnerability
+def check_sql_injection(url):
+    payloads = [
+        "1' OR '1'='1",
+        # More comprehensive SQL injection payloads
+        # ...
+    ]
+    for payload in payloads:
+        try:
+            response = requests.get(url + "?id=" + payload)
+            if "Error" in response.text:
+                print("SQL injection vulnerability found: " + url)
+                break  # Exit loop once a vulnerability is found
+        except requests.RequestException:
+            print("Error occurred while checking SQL injection vulnerability.")
+
+# Main function to scan a URL for security vulnerabilities
+def scan(url):
+    check_xss(url)
+    check_sql_injection(url)
+
+# Example usage
+scan("https://example.com")
